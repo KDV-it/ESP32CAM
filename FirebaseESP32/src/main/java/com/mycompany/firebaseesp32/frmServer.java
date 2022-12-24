@@ -4,26 +4,23 @@
  */
 package com.mycompany.firebaseesp32;
 
-import com.google.cloud.firestore.Firestore;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import java.io.IOException;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.google.gson.*;
-import java.util.ArrayList;
 import java.util.Iterator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.*;
 import java.text.*;
+import java.text.SimpleDateFormat; 
+import java.util.Date; 
+
+
 
 /**
  *
@@ -57,8 +54,8 @@ public class frmServer extends javax.swing.JFrame {
 
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Object document = dataSnapshot.getValue();
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-                LocalDateTime now = LocalDateTime.now();
+//                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+//                LocalDateTime now = LocalDateTime.now();
                 String dc = document.toString();
 
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -67,22 +64,37 @@ public class frmServer extends javax.swing.JFrame {
 
                 String el = "{ data: " + prettyJsonString + "}";
                 JSONObject ob = new JSONObject(el);
-                
-                
+
                 JSONObject songs = ob.getJSONObject("data");
                 Iterator x = songs.keys();
                 JSONArray jsonArray = new JSONArray();
 
+                String resultData = "";
                 while (x.hasNext()) {
                     String key = (String) x.next();
                     String k = String.valueOf(songs.get(key));
-                    System.out.println(k);
-                    
+                    k = k.substring(1, k.length() - 1);
+
+                    String[] arrTime = k.split(",");
+
+                    for (int q = 0; q < arrTime.length; q++) {                   
+                        long epoch = Long.parseLong(arrTime[q]);
+                        Date date = new Date( epoch * 1000 );
+                        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy - HH:mm:SS");
+                        String dates = DATE_FORMAT.format(date);
+                        
+                        String status = "";
+                        try {
+                            System.out.println(convertEpochTime(dates));
+                        } catch (ParseException ex) {
+                            Logger.getLogger(frmServer.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        
+                        resultData += (key + " : " + dates + "\n");
+                    }
                 }
-                System.out.println(jsonArray);
-                
-//                System.out.println(prettyJsonString);
-                updateTextArea(prettyJsonString);
+
+                updateTextArea(resultData);
             }
 
             public void onCancelled(DatabaseError error) {
@@ -92,9 +104,16 @@ public class frmServer extends javax.swing.JFrame {
 
     }
     
-    
-    public String convertEpochTime(int time){
-         Date date = new Date(time);
+    public long convertEpochTime(String time) throws ParseException{
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy - HH:mm:SS");
+        Date date = df.parse(time);
+        long epoch = date.getTime();
+        return epoch;
+        
+    }
+
+    public String convertEpochTime(int time) {
+        Date date = new Date(time);
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
         String formatted = format.format(date);
@@ -128,6 +147,7 @@ public class frmServer extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         listData = new javax.swing.JTextArea();
         jButton2 = new javax.swing.JButton();
+        cbbTime = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -149,21 +169,30 @@ public class frmServer extends javax.swing.JFrame {
             }
         });
 
+        cbbTime.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5 Phút", "10 Phút", "15 Phút", "30 Phút" }));
+        cbbTime.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbbTimeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(23, 23, 23)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(20, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(125, 125, 125))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(cbbTime, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(67, 67, 67)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,9 +200,11 @@ public class frmServer extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbbTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -189,6 +220,11 @@ public class frmServer extends javax.swing.JFrame {
         System.exit(0);
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void cbbTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbTimeActionPerformed
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbbTimeActionPerformed
 
     public void updateTextArea(String data) {
         listData.setText(data);
@@ -235,6 +271,7 @@ public class frmServer extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> cbbTime;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JProgressBar jProgressBar1;
