@@ -17,10 +17,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.*;
 import java.text.*;
-import java.text.SimpleDateFormat; 
-import java.util.Date; 
-
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -29,7 +28,14 @@ import java.util.Date;
 public class frmServer extends javax.swing.JFrame {
 
     RealtimeFirebase fbs = null;
+    
+    DatabaseReference ref = null;
+
     private static JSONObject jObject = null;
+
+    private Date firebaseLastConnectedTime = null;
+
+    private boolean isConnected = false;
 
     /**
      * Creates new form frmClient
@@ -40,76 +46,37 @@ public class frmServer extends javax.swing.JFrame {
     }
 
     public void run() {
-        RealtimeFirebase fbs = null;
         try {
-            fbs = new RealtimeFirebase();
+            this.fbs = new RealtimeFirebase();
+
+            this.ref = fbs.getDb()
+                    .getReference("/diemdanh");
+            this.ref.addValueEventListener(new ValueEventListener() {
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    handleDataChange(dataSnapshot);
+                }
+
+                public void onCancelled(DatabaseError error) {
+                    System.out.print("Error: " + error.getMessage());
+                }
+            });
+
+            this.firebaseLastConnectedTime = new Date();
+            this.isConnected = true;
+            this.jButton1.setText("Disconnect");
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Kết nối Firebase thất bại!");
             e.printStackTrace();
         }
 
-//      new FirestoreDatabase();
-        DatabaseReference ref = fbs.getDb()
-                .getReference("/diemdanh");
-        ref.addValueEventListener(new ValueEventListener() {
-
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Object document = dataSnapshot.getValue();
-//                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-//                LocalDateTime now = LocalDateTime.now();
-                String dc = document.toString();
-
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                JsonElement je = JsonParser.parseString(dc);
-                String prettyJsonString = gson.toJson(je).trim();
-
-                String el = "{ data: " + prettyJsonString + "}";
-                JSONObject ob = new JSONObject(el);
-
-                JSONObject songs = ob.getJSONObject("data");
-                Iterator x = songs.keys();
-                JSONArray jsonArray = new JSONArray();
-
-                String resultData = "";
-                while (x.hasNext()) {
-                    String key = (String) x.next();
-                    String k = String.valueOf(songs.get(key));
-                    k = k.substring(1, k.length() - 1);
-
-                    String[] arrTime = k.split(",");
-
-                    for (int q = 0; q < arrTime.length; q++) {                   
-                        long epoch = Long.parseLong(arrTime[q]);
-                        Date date = new Date( epoch * 1000 );
-                        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy - HH:mm:SS");
-                        String dates = DATE_FORMAT.format(date);
-                        
-                        String status = "";
-                        try {
-                            System.out.println(convertEpochTime(dates));
-                        } catch (ParseException ex) {
-                            Logger.getLogger(frmServer.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        
-                        resultData += (key + " : " + dates + "\n");
-                    }
-                }
-
-                updateTextArea(resultData);
-            }
-
-            public void onCancelled(DatabaseError error) {
-                System.out.print("Error: " + error.getMessage());
-            }
-        });
-
     }
-    
-    public long convertEpochTime(String time) throws ParseException{
+
+    public long convertEpochTime(String time) throws ParseException {
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy - HH:mm:SS");
         Date date = df.parse(time);
         long epoch = date.getTime();
         return epoch;
-        
+
     }
 
     public String convertEpochTime(int time) {
@@ -169,7 +136,7 @@ public class frmServer extends javax.swing.JFrame {
             }
         });
 
-        cbbTime.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5 Phút", "10 Phút", "15 Phút", "30 Phút" }));
+        cbbTime.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1 Phút", "5 Phút", "10 Phút", "15 Phút", "30 Phút" }));
         cbbTime.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbbTimeActionPerformed(evt);
@@ -211,8 +178,91 @@ public class frmServer extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void handleDataChange(DataSnapshot dataSnapshot) {
+        Object document = dataSnapshot.getValue();
+        String dc = document.toString();
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonElement je = JsonParser.parseString(dc);
+        String prettyJsonString = gson.toJson(je).trim();
+
+        String el = "{ data: " + prettyJsonString + "}";
+        JSONObject ob = new JSONObject(el);
+
+        JSONObject songs = ob.getJSONObject("data");
+        Iterator x = songs.keys();
+
+        String resultData = "";
+        while (x.hasNext()) {
+            String key = (String) x.next();
+
+            if (key.equals("1")) {
+                continue;
+            }
+
+            String k = String.valueOf(songs.get(key));
+            k = k.substring(1, k.length() - 1);
+
+            String[] arrTime = k.split(",");
+
+            String lastScanTime = arrTime[arrTime.length - 1];
+
+            long epoch = Long.parseLong(lastScanTime);
+            Date date = new Date(epoch * 1000);
+            SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy - HH:mm:SS");
+            String dates = DATE_FORMAT.format(date);
+            
+            // Filter the time after the Firebase is initialized
+            Calendar initCal = Calendar.getInstance();
+            initCal.setTime(this.firebaseLastConnectedTime);
+            
+            Calendar scanCal = Calendar.getInstance();
+            scanCal.setTime(date);
+            
+            if (initCal.compareTo(scanCal) >= 0) {
+                continue;
+            }
+
+            if (this.isLated(date)) {
+                resultData += (key + " : " + dates + " (Lated)" + "\n");
+            } else {
+                resultData += (key + " : " + dates + "\n");
+            }
+        }
+
+        updateTextArea(resultData);
+    }
+
+    private int getComboBoxNumber() {
+        String selected = this.cbbTime.getSelectedItem().toString();
+        String mystr = selected.replaceAll("[^\\d]", "");
+        return Integer.parseInt(mystr);
+    }
+
+    private boolean isLated(Date scanTimeRaw) {
+        // Get calendar object from firebase's last connected time
+        Calendar lastConn = Calendar.getInstance();
+        lastConn.setTime(this.firebaseLastConnectedTime);
+        lastConn.add(Calendar.MINUTE, this.getComboBoxNumber());
+
+        // Get calendar object from scan time
+        Calendar scanTime = Calendar.getInstance();
+        scanTime.setTime(scanTimeRaw);
+
+        return lastConn.compareTo(scanTime) < 0;
+    }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (this.isConnected) {
+            this.ref.onDisconnect();
+            this.fbs.db.goOffline();
+            
+            this.fbs = null;
+            this.jButton1.setText("Connect");
+            this.isConnected = false;
+            return;
+        }
+        
         run();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -222,7 +272,6 @@ public class frmServer extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void cbbTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbTimeActionPerformed
-        
         // TODO add your handling code here:
     }//GEN-LAST:event_cbbTimeActionPerformed
 

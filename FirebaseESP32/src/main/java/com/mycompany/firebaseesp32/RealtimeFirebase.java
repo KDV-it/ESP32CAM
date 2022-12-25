@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.firebaseesp32;
+
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -11,12 +12,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+
 /**
  *
  * @author ASUS
  */
 public class RealtimeFirebase {
-    
+
     FirebaseDatabase db;
 
     public RealtimeFirebase() throws IOException {
@@ -31,8 +33,12 @@ public class RealtimeFirebase {
                 .setDatabaseUrl("https://esp32-cam-b1f5b-default-rtdb.asia-southeast1.firebasedatabase.app/")
                 .build();
 
-        FirebaseApp.initializeApp(options);
+        var apps = FirebaseApp.getApps();
 
+        if (apps.isEmpty()) {
+            FirebaseApp.initializeApp(options);
+
+        }
         db = FirebaseDatabase.getInstance();
     }
 
