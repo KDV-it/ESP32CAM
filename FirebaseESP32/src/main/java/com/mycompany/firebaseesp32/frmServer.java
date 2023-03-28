@@ -66,11 +66,8 @@ public class frmServer extends javax.swing.JFrame {
      */
     public frmServer() throws IOException {
         initComponents();
-        fillDataJTable("1911062456", "Vo Duy Khang", "March 22, 2023 at 12:45:09PM UTC+7", (byte) 1);
-        fillDataJTable("1911062456", "Vo Duy Khang", "March 22, 2023 at 12:45:09PM UTC+7", (byte) 1);
-        fillDataJTable("1911062456", "Vo Duy Khang", "March 22, 2023 at 12:45:09PM UTC+7", (byte) 1);
-        fillDataJTable("1911062456", "Vo Duy Minh", "March 22, 2023 at 12:45:09PM UTC+7", (byte) 1);
-
+        fillDataJTable("1","A","1H",(byte)1);
+        fillDataJTable("1","B","1H",(byte)1);
     }
 
     public void run() {
@@ -457,33 +454,28 @@ public class frmServer extends javax.swing.JFrame {
             }
         });
     }
-
+ List<studentModel> studentList = new ArrayList<>();
 //    Jtable to excel
     public void fillDataJTable(String mssv, String name, String time, byte status) {
         String[] columns = new String[]{
             "Mssv", "Name", "Time", "Status"
         };
-        String sts = "";
-        if (status != 1) {
-            sts = "Tre";
-        } else {
-            sts = "Dung Gio";
+
+       
+        studentModel student = new studentModel(mssv, name, time, status);
+        studentList.add(student);
+
+        Object[][] data = new Object[studentList.size()][];
+        for (int i = 0; i < studentList.size(); i++) {
+            student = studentList.get(i);
+            Object[] row = new Object[] {student.getMssv(), student.getName(), student.getTime(), student.getStatus()};
+            data[i] = row;
         }
-//        Object[][] data = new Object[][]{
-//            {mssv, name, time, sts}, //            {"1911060595","Pham Trung Tin","March 22, 2023 at 12:45:09PM UTC+7","1"},
-//        //            {"1911060565","Le Van Thang","March 22, 2023 at 12:47:09PM UTC+7","1"},
-//        //            {"1911062443","Le Van Huy","March 22, 2023 at 12:50:09PM UTC+7","1"},
-//        //            
-//        };
-        Object data[] = new Object[] {mssv, name, time, sts};
-        String data2[] = {mssv, name, time, sts};
-        
-//        DefaultTableModel model = (new DefaultTableModel(data, columns))jTable1.getModel();
-//        jt.setModel(model);
-//        JTable jt = new JTable(model);
-//        model.addRow(data);
-        
-    }
+
+        DefaultTableModel tableModel = new DefaultTableModel(data, columns);
+//        JTable table = new JTable(tableModel);
+        jTable1.setModel(tableModel); 
+   }
 
     public void openFile(String file) {
         try {
