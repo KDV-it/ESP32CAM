@@ -5,8 +5,10 @@
 package com.mycompany.firebaseesp32;
 
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.firestore.Firestore;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.google.firebase.cloud.FirestoreClient;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
@@ -20,10 +22,11 @@ import java.io.IOException;
 public class RealtimeFirebase {
 
     FirebaseDatabase db;
+    Firestore data; 
 
     public RealtimeFirebase() throws IOException {
         File file = new File(
-                getClass().getClassLoader().getResource("esp32.json").getFile()
+                getClass().getClassLoader().getResource("esp32-cam.json").getFile()
         );
 
         FileInputStream fis = new FileInputStream(file);
@@ -40,10 +43,15 @@ public class RealtimeFirebase {
 
         }
         db = FirebaseDatabase.getInstance();
+        data = FirestoreClient.getFirestore();
     }
 
     public FirebaseDatabase getDb() {
         return db;
+    }
+    
+    public Firestore getData() {
+        return data;
     }
 
 }

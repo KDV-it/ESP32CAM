@@ -58,7 +58,7 @@
                   <Component id="cbbTime" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jButton2" pref="39" max="32767" attributes="0"/>
+              <Component id="jButton2" pref="41" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>

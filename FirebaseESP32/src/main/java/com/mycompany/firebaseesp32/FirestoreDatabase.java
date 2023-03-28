@@ -9,6 +9,7 @@ import com.google.cloud.firestore.Firestore;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -17,22 +18,22 @@ import java.io.InputStream;
  * @author ASUS
  */
 public class FirestoreDatabase {
-    Firestore firestore;
    public FirestoreDatabase(){
         try {
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            InputStream is = classLoader.getResourceAsStream("esp32.json");
+           InputStream serviceAccount = new FileInputStream("esp32-cam.json");
+            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                .setCredentials(credentials)
+                .build();
+            FirebaseApp.initializeApp(options);
 
-            GoogleCredentials googleCrendentials = GoogleCredentials.fromStream(is);
-            FirebaseOptions op = new FirebaseOptions.Builder()
-                    .setCredentials(googleCrendentials)
-                    .build();
-            FirebaseApp.initializeApp(op);
-            firestore = FirestoreClient.getFirestore();
+            Firestore db = FirestoreClient.getFirestore();
 
         } catch (IOException ex) {
 
         } catch (java.lang.IllegalStateException e) {
         }
+        
+        
    }
 }
