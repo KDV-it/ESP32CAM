@@ -46,10 +46,12 @@ public class RealtimeFirebase {
         data = FirestoreClient.getFirestore();
     }
 
+    // realtime db
     public FirebaseDatabase getDb() {
         return db;
     }
     
+    //firestore db
     public Firestore getData() {
         return data;
     }
