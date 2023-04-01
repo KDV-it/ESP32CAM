@@ -72,8 +72,9 @@ public class frmServer extends javax.swing.JFrame {
      */
     public frmServer() throws IOException, InterruptedException, ExecutionException {
         initComponents();
+        // Date date = new Date();
         // fillDataJTable("1","A","1H",(byte)1);
-        // fillDataJTable("1","B","1H",(byte)1);
+        // fillDataJTable("1", "B", date, 1);
         readStudent("1911060105");
     }
 
@@ -455,12 +456,16 @@ public class frmServer extends javax.swing.JFrame {
 
         // check is student exist
         students.forEach(e -> {
-            // display this student on view
             if (e.mssv.toString().equals(mssv)) {
                 studentList.add(e);
-
             }
         });
+
+        // display this student on view
+        studentList.forEach(student -> {
+            fillDataJTable(student);
+        });
+
     }
 
     /**
@@ -513,13 +518,10 @@ public class frmServer extends javax.swing.JFrame {
 
     // Jtable to excel
 
-    public void fillDataJTable(String mssv, String name, Date time, byte status) {
+    public void fillDataJTable(studentModel student) {
         String[] columns = new String[] {
                 "Mssv", "Name", "Time", "Status"
         };
-
-        studentModel student = new studentModel(mssv, name, time, status);
-        studentList.add(student);
 
         Object[][] data = new Object[studentList.size()][];
         for (int i = 0; i < studentList.size(); i++) {
