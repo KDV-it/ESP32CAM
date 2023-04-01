@@ -4,55 +4,60 @@
  */
 package com.mycompany.firebaseesp32;
 
+import java.util.Date;
+
 /**
  *
  * @author ASUS
  */
 public class studentModel {
+
     String mssv;
     String name;
-    String time;
-    byte status;
-    
-    public studentModel(String mssv, String name, String time, byte status) {
+    Date time;
+    int status;
+
+    public studentModel(String mssv, String name, Date time, int status) {
         super();
         this.mssv = mssv;
         this.name = name;
         this.time = time;
         this.status = status;
     }
-    
-    public String getMssv(){
+
+    public studentModel() {
+    }
+
+    public String getMssv() {
         return mssv;
     }
-    
+
     public void setMssv(String mssv) {
         this.mssv = mssv;
     }
-    
-    public String getName(){
+
+    public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
-    public String getTime(){
+
+    public Date getTime() {
         return time;
     }
-    
-    public void setTime(String time) {
+
+    public void setTime(Date time) {
         this.time = time;
     }
-    
-    public byte getStatus(){
+
+    public int getStatus() {
         return status;
     }
-    
-    public void setStatus(byte status) {
+
+    public void setStatus(int status) {
         this.status = status;
     }
-    
-    
+
 }

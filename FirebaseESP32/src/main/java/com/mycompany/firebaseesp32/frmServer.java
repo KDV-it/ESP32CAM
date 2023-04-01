@@ -23,7 +23,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteResult;
 
 import com.google.firebase.FirebaseApp;
@@ -64,10 +68,11 @@ public class frmServer extends javax.swing.JFrame {
     /**
      * Creates new form frmClient
      */
-    public frmServer() throws IOException {
+    public frmServer() throws IOException, InterruptedException, ExecutionException {
         initComponents();
-        fillDataJTable("1","A","1H",(byte)1);
-        fillDataJTable("1","B","1H",(byte)1);
+//        fillDataJTable("1","A","1H",(byte)1);
+//        fillDataJTable("1","B","1H",(byte)1);
+        readStudent();
     }
 
     public void run() {
@@ -415,6 +420,26 @@ public class frmServer extends javax.swing.JFrame {
         listData.setText(data);
     }
 
+    public void readStudent() throws IOException, InterruptedException, ExecutionException {
+
+        this.fbs = new RealtimeFirebase();
+        List<studentModel> resStudents = new ArrayList<>();
+
+//        CollectionReference docRef = fbs.getData().collection("Students");
+//        ApiFuture<QuerySnapshot> result = docRef.get();
+//        
+//        QuerySnapshot doc = result.get();
+        ApiFuture<QuerySnapshot> future = fbs.getData().collection("Students").get();
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+        for (DocumentSnapshot document : documents) {
+            studentModel tempModel = new studentModel();
+            tempModel = document.toObject(studentModel.class);
+//            System.out.println(document.getData());
+            System.out.println(tempModel);
+
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -450,32 +475,36 @@ public class frmServer extends javax.swing.JFrame {
                     new frmServer().setVisible(true);
                 } catch (IOException ex) {
                     Logger.getLogger(frmServer.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(frmServer.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ExecutionException ex) {
+                    Logger.getLogger(frmServer.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
     }
- List<studentModel> studentList = new ArrayList<>();
+    List<studentModel> studentList = new ArrayList<>();
 //    Jtable to excel
-    public void fillDataJTable(String mssv, String name, String time, byte status) {
+
+    public void fillDataJTable(String mssv, String name, Date time, byte status) {
         String[] columns = new String[]{
             "Mssv", "Name", "Time", "Status"
         };
 
-       
         studentModel student = new studentModel(mssv, name, time, status);
         studentList.add(student);
 
         Object[][] data = new Object[studentList.size()][];
         for (int i = 0; i < studentList.size(); i++) {
             student = studentList.get(i);
-            Object[] row = new Object[] {student.getMssv(), student.getName(), student.getTime(), student.getStatus()};
+            Object[] row = new Object[]{student.getMssv(), student.getName(), student.getTime(), student.getStatus()};
             data[i] = row;
         }
 
         DefaultTableModel tableModel = new DefaultTableModel(data, columns);
 //        JTable table = new JTable(tableModel);
-        jTable1.setModel(tableModel); 
-   }
+        jTable1.setModel(tableModel);
+    }
 
     public void openFile(String file) {
         try {
