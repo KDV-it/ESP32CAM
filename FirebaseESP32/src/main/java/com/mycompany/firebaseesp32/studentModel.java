@@ -13,14 +13,14 @@ import java.util.Date;
 public class studentModel {
 
     String mssv;
-    String name;
+//    String name;
     Date time;
-    int status;
+    String status;
 
-    public studentModel(String mssv, String name, Date time, int status) {
+    public studentModel(String mssv, Date time, String status) {
         super();
         this.mssv = mssv;
-        this.name = name;
+//        this.name = name;
         this.time = time;
         this.status = status;
     }
@@ -36,13 +36,13 @@ public class studentModel {
         this.mssv = mssv;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
 
     public Date getTime() {
         return time;
@@ -52,11 +52,11 @@ public class studentModel {
         this.time = time;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

@@ -75,7 +75,7 @@ public class frmServer extends javax.swing.JFrame {
         // Date date = new Date();
         // fillDataJTable("1","A","1H",(byte)1);
         // fillDataJTable("1", "B", date, 1);
-        readStudent("1911060105");
+//        readStudent("1911060105");
     }
 
     public void run() {
@@ -163,7 +163,7 @@ public class frmServer extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jProgressBar1 = new javax.swing.JProgressBar();
@@ -198,8 +198,7 @@ public class frmServer extends javax.swing.JFrame {
             }
         });
 
-        cbbTime.setModel(new javax.swing.DefaultComboBoxModel<>(
-                new String[] { "1 Phút", "5 Phút", "10 Phút", "15 Phút", "30 Phút" }));
+        cbbTime.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1 Phút", "5 Phút", "10 Phút", "15 Phút", "30 Phút" }));
         cbbTime.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbbTimeActionPerformed(evt);
@@ -207,15 +206,16 @@ public class frmServer extends javax.swing.JFrame {
         });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][] {
-                        { null, null, null, null },
-                        { null, null, null, null },
-                        { null, null, null, null },
-                        { null, null, null, null }
-                },
-                new String[] {
-                        "MSSV", "Name", "Time", "Status"
-                }));
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "MSSV", "Time", "Status"
+            }
+        ));
         jScrollPane2.setViewportView(jTable1);
 
         jButton3.setText("Save");
@@ -233,63 +233,56 @@ public class frmServer extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(15, 15, 15)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(cbbTime, javax.swing.GroupLayout.PREFERRED_SIZE, 89,
-                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 357,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(22, 22, 22)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jButton4))
-                                .addContainerGap(14, Short.MAX_VALUE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel1)
-                                .addGap(359, 359, 359)));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbbTime, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton4))
+                .addContainerGap(14, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(359, 359, 359))
+        );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(34, 34, 34)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cbbTime))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 459,
-                                                Short.MAX_VALUE)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jButton3)
-                                                .addGap(13, 13, 13)
-                                                .addComponent(jButton4)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(jButton2))
-                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap()));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbbTime))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton3)
+                        .addGap(13, 13, 13)
+                        .addComponent(jButton4)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void handleDataChange(DataSnapshot dataSnapshot)
             throws IOException, InterruptedException, ExecutionException {
+        this.studentList = new ArrayList<>();
         Object document = dataSnapshot.getValue();
         String dc = document.toString();
 
@@ -307,39 +300,44 @@ public class frmServer extends javax.swing.JFrame {
         while (x.hasNext()) {
             String key = (String) x.next();
 
-            if (key.equals("1")) {
-                continue;
-            }
-
             String k = String.valueOf(songs.get(key));
             k = k.substring(1, k.length() - 1);
 
             String[] arrTime = k.split(",");
 
-            String lastScanTime = arrTime[arrTime.length - 1];
+            for (String lastScanTime : arrTime) {
+//                String lastScanTime = arrTime[arrTime.length - 1];
 
-            long epoch = Long.parseLong(lastScanTime);
-            Date date = new Date(epoch * 1000);
-            SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy - HH:mm:SS");
-            String dates = DATE_FORMAT.format(date);
+                long epoch = Long.parseLong(lastScanTime);
+                Date date = new Date(epoch * 1000);
+                SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy - HH:mm:SS");
+                String dates = DATE_FORMAT.format(date);
 
-            // Filter the time after the Firebase is initialized
-            Calendar initCal = Calendar.getInstance();
-            initCal.setTime(this.firebaseLastConnectedTime);
+                // Filter the time after the Firebase is initialized
+                Calendar initCal = Calendar.getInstance();
+                initCal.setTime(this.firebaseLastConnectedTime);
 
-            Calendar scanCal = Calendar.getInstance();
-            scanCal.setTime(date);
+                Calendar scanCal = Calendar.getInstance();
+                scanCal.setTime(date);
 
-            if (initCal.compareTo(scanCal) >= 0) {
-                continue;
-            }
-
-            if (this.isLated(date)) {
-                resultData += (key + " : " + dates + " (Lated)" + "\n");
-            } else {
-                resultData += (key + " : " + dates + "\n");
+                if (initCal.compareTo(scanCal) >= 0) {
+                    continue;
+                }
+                boolean isLated = this.isLated(date);
+                String status = "Ok";
+                if (isLated) {
+                    status = "Late";
+                }
+                studentModel st = new studentModel(key, date, status);
+                this.studentList.add(st);
+                if (isLated) {
+                    resultData += (key + " : " + dates + " (Late)" + "\n");
+                } else {
+                    resultData += (key + " : " + dates + "\n");
+                }
             }
         }
+        fillDataJTable();
 
         updateTextArea(resultData);
     }
@@ -444,26 +442,25 @@ public class frmServer extends javax.swing.JFrame {
 
         this.fbs = new RealtimeFirebase();
         List<studentModel> students = new ArrayList<>();
-
-        // fetch student collection
-        ApiFuture<QuerySnapshot> future = fbs.getData().collection("Students").get();
-        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-
-        for (DocumentSnapshot document : documents) {
-            studentModel resStudent = document.toObject(studentModel.class);
-            students.add(resStudent);
-        }
+//
+//        // fetch student collection
+//        ApiFuture<QuerySnapshot> future = fbs.getData().collection("Students").get();
+//        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+//
+//        for (DocumentSnapshot document : documents) {
+//            studentModel resStudent = document.toObject(studentModel.class);
+//            students.add(resStudent);
+//        }
 
         // check is student exist
-        students.forEach(e -> {
-            if (e.mssv.toString().equals(mssv)) {
-                studentList.add(e);
-            }
-        });
-
+//        students.forEach(e -> {
+//            if (e.mssv.toString().equals(mssv)) {
+//                studentList.add(e);
+//            }
+//        });
         // display this student on view
         studentList.forEach(student -> {
-            fillDataJTable(student);
+            fillDataJTable();
         });
 
     }
@@ -517,17 +514,16 @@ public class frmServer extends javax.swing.JFrame {
     }
 
     // Jtable to excel
-
-    public void fillDataJTable(studentModel student) {
-        String[] columns = new String[] {
-                "Mssv", "Name", "Time", "Status"
+    public void fillDataJTable() {
+        String[] columns = new String[]{
+            "Mssv", "Time", "Status"
         };
 
         Object[][] data = new Object[studentList.size()][];
         for (int i = 0; i < studentList.size(); i++) {
-            student = studentList.get(i);
-            Object[] row = new Object[] { student.getMssv(), student.getName(), student.getTime(),
-                    student.getStatus() };
+            studentModel student = studentList.get(i);
+            Object[] row = new Object[]{student.getMssv(), student.getTime(),
+                student.getStatus()};
             data[i] = row;
         }
 
