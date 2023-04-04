@@ -75,6 +75,8 @@ FirebaseConfig config;
 
 bool signupOK = false;
 
+const long SCAN_INTERVAL = 1 * 60;
+
 void setup() {
   // Init wifi and firebase connection
   initWifi();
@@ -222,7 +224,7 @@ void QRCodeReader(void *pvParameters) {
         QRCodeResult = "Decoding FAILED";
       } else {
         Serial.printf("Decoding successful:\n");
-        dumpData(&data);
+        // dumpData(&data);
         writePayloadToFirebase(&data);
       }
       Serial.println();
@@ -246,6 +248,8 @@ void dumpData(const struct quirc_data *data) {
   Serial.printf("Payload: %s\n", data->payload);
 
   QRCodeResult = (const char *)data->payload;
+
+  Serial.println();
 }
 
 // Write the payload to firebase as string
@@ -254,16 +258,45 @@ void writePayloadToFirebase(const struct quirc_data *data) {
     unsigned long epochTime = getEpochTime();
     String payload = (const char *)data->payload;
 
-    String path = "diemdanh/" + String(epochTime);
+    String path = "diemdanh/" + payload;
 
-    if (Firebase.RTDB.setString(&fbdo, path, payload)) {
-      Serial.println("PASSED");
-      Serial.println("PATH: " + fbdo.dataPath());
-      Serial.println("TYPE: " + fbdo.dataType());
-      Serial.println("PAYLOAD: " + payload);
-    } else {
-      Serial.println("FAILED");
-      Serial.println("REASON: " + fbdo.errorReason());
+    Serial.println("PATH BEFORE WRITE: " + path);
+
+    // If payload array is existed
+    if (Firebase.RTDB.getArray(&fbdo, path)) {
+      FirebaseJsonArray &arr1 = fbdo.to<FirebaseJsonArray>();
+
+      FirebaseJsonData jsonData;
+      arr1.get(jsonData, arr1.size() - 1);
+
+
+      String lastScanEpoch = jsonData.stringValue;
+      long lastScanEpochLong = lastScanEpoch.toInt();
+      long res = epochTime - lastScanEpochLong;
+
+      // Only write to firebase if lastScanEpochLong is greater than SCAN_INTERVAL
+      if (res > SCAN_INTERVAL) {
+        arr1.add(epochTime);
+
+        String outStr;
+        arr1.toString(outStr, true);
+        Serial.println("New record captured: " + outStr);
+        Firebase.RTDB.setArrayAsync(&fbdo, path, &arr1);
+      } else {
+        Serial.println("Last scanned: " + String(lastScanEpochLong));
+        Serial.println("Current epoch time: " + String(epochTime));
+        Serial.println("Please wait " + String(SCAN_INTERVAL - res) + " second(s) to continue scanning");
+      }
+    } else {  // Otherwise
+      Serial.printf("Not found... %s\n", fbdo.errorReason().c_str());
+
+      FirebaseJsonArray arr;
+      arr.add(epochTime);
+
+      String outStr;
+      arr.toString(outStr, true);
+      Serial.println("New record captured: " + outStr);
+      Firebase.RTDB.setArrayAsync(&fbdo, path, &arr);
     }
   }
 }
@@ -273,7 +306,7 @@ unsigned long getEpochTime() {
   time_t now;
   struct tm timeinfo;
   if (!getLocalTime(&timeinfo)) {
-    //Serial.println("Failed to obtain time");
+    Serial.println("Failed to obtain time");
     return (0);
   }
   time(&now);
